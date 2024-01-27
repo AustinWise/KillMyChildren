@@ -45,17 +45,6 @@ namespace KillMyChildren
         }
 
         /// <summary>
-        /// Ensures that any child processes started by the current process will be killed
-        /// when the current process exits.
-        /// </summary>
-        public static void KillAllMyChildrenWhenIExit()
-        {
-            EnsureJob();
-            if (!PInvoke.AssignProcessToJobObject(s_job, Process.GetCurrentProcess().SafeHandle))
-                throw new Win32Exception();
-        }
-
-        /// <summary>
         /// Ensures that the given process will be killed when the current process exits.
         /// Child processes started by <paramref name="p"/> after this function is called
         /// will also be killed.
@@ -65,6 +54,15 @@ namespace KillMyChildren
             EnsureJob();
             if (!PInvoke.AssignProcessToJobObject(s_job, p.SafeHandle))
                 throw new Win32Exception();
+        }
+
+        /// <summary>
+        /// Ensures that any child processes started by the current process will be killed
+        /// when the current process exits.
+        /// </summary>
+        public static void KillAllMyChildrenWhenIExit()
+        {
+            KillProcessWhenIExit(Process.GetCurrentProcess());
         }
     }
 }
